@@ -1,7 +1,6 @@
 //***********************IMPORT STATMENTS********************* */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-analytics.js"; 
-import {getDatabase, ref, set} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-database.js"; 
+import {getDatabase, ref, set, get, child} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-database.js"; 
 
 
 const firebaseConfig = {
@@ -17,9 +16,63 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getDatabase();
 
 
 
 //************************GET EVENTS FROM HTML*********************************** */
+const phoneNo = document.getElementById('phone-no');
+const login = document.getElementsByClassName('login-btn')
+const register = document.getElementsByClassName('register-btn')
+
+
+//****************************VALIDATION FOR PHONE NUMBER********************************* */
+const validation = () => {
+  // let phoneVal = /^\d{10}$/;
+  let phoneVal = /^[0-9]+$/;
+
+  if(!phoneVal.test(phoneNo.value)){
+    alert('Wrong Input OR field is empty');
+    return false;
+  }
+  return true;
+}
+
+
+
+
+
+//***********************REGISTER USER TO THE FIREBASE************************ */
+const registerUser = () => {
+  
+  if(!validation()){
+    return;
+  }
+
+  const dbRef = ref(db)
+  get(child(dbRef, "List"+ phoneNo.value))
+  .then((user)=>{
+    
+    if(user.exists()){
+      alert('User Already exists.')
+    }
+
+    else{
+      set(ref(db, 'List'+ phoneNo.value),
+      {
+        phoneNumber: phoneNo.value
+      }
+      )
+      .then(()=>{
+        alert(`${phoneNo} added successfully`)
+      })
+      .catch((error)=>{
+        alert('error '+ error)
+      })
+    }
+  })
+}
+
+
+
+register[0].addEventListener('click', registerUser);
