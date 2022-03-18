@@ -1,4 +1,4 @@
-//***********************IMPORT STATMENTS********************* */
+//*********************** IMPORT STATMENTS ********************* */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
 import {getDatabase, ref, set, get, child} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-database.js"; 
 
@@ -20,19 +20,19 @@ const db = getDatabase();
 
 
 
-//************************GET EVENTS FROM HTML*********************************** */
+//************************  GET EVENTS FROM HTML  *********************************** */
 const phoneNo = document.getElementById('phone-no');
-const login = document.getElementsByClassName('login-btn')
 const register = document.getElementsByClassName('register-btn')
+const logIn = document.getElementsByClassName('login-btn');
 
-
-//****************************VALIDATION FOR PHONE NUMBER********************************* */
+//****************************  VALIDATION FOR PHONE NUMBER ********************************* */
 const validation = () => {
   // let phoneVal = /^\d{10}$/;
   let phoneVal = /^[0-9]+$/;
 
   if(!phoneVal.test(phoneNo.value)){
     alert('Wrong Input OR field is empty');
+    window.location='index.html';
     return false;
   }
   return true;
@@ -42,9 +42,9 @@ const validation = () => {
 
 
 
-//***********************REGISTER USER TO THE FIREBASE************************ */
+//*********************** REGISTER USER TO THE FIREBASE ************************ */
 const registerUser = () => {
-  
+
   if(!validation()){
     return;
   }
@@ -54,7 +54,7 @@ const registerUser = () => {
   .then((user)=>{
     
     if(user.exists()){
-      alert('User Already exists.')
+      alert('User Already Registered.')
     }
 
     else{
@@ -64,7 +64,8 @@ const registerUser = () => {
       }
       )
       .then(()=>{
-        alert(`${phoneNo} added successfully`)
+        alert(`${phoneNo.value} Registered successfully. Login to view your Dashboard.`)
+        phoneNo.value='';
       })
       .catch((error)=>{
         alert('error '+ error)
@@ -76,3 +77,36 @@ const registerUser = () => {
 
 
 register[0].addEventListener('click', registerUser);
+
+
+
+
+//**********************  LOGIN PART  ************************** */
+
+const loginUser = (user) => {
+  console.log('hi login')
+  sessionStorage.setItem('user',JSON.stringify(user));
+  console.log(user)
+  window.location='../Dashboard/dashboard.html'; //it tells after login where page should go.
+}
+
+const checkLoginUser = () => {
+
+  const dbRef = ref(db)
+
+  get(child(dbRef, "List"+ phoneNo.value))
+  .then((user)=>{
+    
+    if(user.exists()){
+      loginUser(user.val());
+    }
+
+    else{
+      alert('User is not registered')
+      phoneNo.value='';
+    }
+  })
+
+}
+
+logIn[0].addEventListener('click',checkLoginUser)
