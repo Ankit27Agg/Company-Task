@@ -1,7 +1,7 @@
 //*********************** IMPORT STATMENTS ********************* */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.8/firebase-app.js";
-import {getDatabase, set, get, child} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-database.js"; 
-import { getStorage, ref, uploadBytesResumable, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
+import {getDatabase,ref as databaseRef, set, get, child, update} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-database.js"; 
+import { getStorage, ref, listAll, uploadBytesResumable, getDownloadURL} from "https://www.gstatic.com/firebasejs/9.6.8/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAMqIwyT6kw54_FnT2GmyR5l8UYeDBZklU",
@@ -34,7 +34,7 @@ function signOut(){
 
 //Heading
 if(currentUser==null){
-  alert('Please Sign Out and login again.')
+  alert('Please click Sign Out and login again.')
   // console.log('bye')
 }
 else{
@@ -48,39 +48,50 @@ else{
 let reader = new FileReader();
 let dataName = document.getElementsByClassName('data');
 
-async function uploadFile(file){
-  const storage = getStorage(); //get storage reference
-  const storageRef = ref(storage, `${currentUser.phoneNumber}/`+file.name);
+function uploadUrl(URL){
 
-  const uploadTask = uploadBytesResumable(storageRef, file);
-  uploadTask.on('state-changed',()=>{
-    getDownloadURL(uploadTask.snapshot.ref).then((URL)=>{
-      console.log(URL);
-      dataName[0].href = `${URL}`
-    })
-  })
-
-  set(ref(db, 'List'+ currentUser.phoneNumber),
+  update(databaseRef(db, 'List'+ currentUser.phoneNumber),
       {
-        phoneNumber: phoneNo.value,
         url: URL
       }
       )
-      .then(()=>{
-        alert('url added in firebase')
-      })
-  // getDownloadURL(storageRef)
-  // .then((url) => {
-  //   const xhr = new XMLHttpRequest();
-  //   xhr.responseType = 'blob';
-  //   xhr.onload = (event) => {
-  //     const blob = xhr.response;
-  //   };
-  //   xhr.open('GET', url);
-  //   xhr.send();
+      // .then(()=>{
+      //   console.log(URL)
+      //   alert('realtime database updated')
+      // })
+      // .catch((error)=>{
+      //   alert('error '+ error)
+      // })
+}
 
-  //   console.log(url)
-  // });
+
+async function uploadFile(file){
+  let storage = getStorage(); //get storage reference
+  let storageRef = ref(storage, `${currentUser.phoneNumber}/`+file.name);
+
+  const uploadTask = uploadBytesResumable(storageRef, file);
+  uploadTask.on('state-changed',()=>{
+
+    getDownloadURL(uploadTask.snapshot.ref)
+    .then((URL)=>{
+      console.log(URL);
+      dataName[0].href = `${URL}`
+      
+      uploadUrl(URL)
+    })
+
+  })
+
+  // set(ref(db, 'List'+ currentUser.phoneNumber),
+  //     {
+  //       phoneNumber: phoneNo.value,
+  //       url: URL
+  //     }
+  //     )
+  //     .then(()=>{
+  //       alert('url added in firebase')
+  //     })
+
 
   alert('file uploaded')
 }
@@ -92,31 +103,38 @@ inputFile.addEventListener('click',()=>{
 
 
 selectFile.onchange = e => {
-  
+
   let file = e.target.files[0]
   if(file.type==='application/pdf'){
     console.log(file.type)
     let fileName = file.name;
+    // uploadFile(file);
 
-    dataName[0].innerHTML+=`${fileName}<br>`;
-    // reader.readAsDataURL(file);
-    // console.log(reader)
-    uploadFile(file);
+    let storage = getStorage(); //get storage reference
+    let storageRef = ref(storage, `${currentUser.phoneNumber}/`);
+
+  
+    listAll(storageRef)
+    .then((res) => {
+      // console.log(res.items)
+      if(res.items.length<3){
+        dataName[0].innerHTML+=`${fileName}<br>`
+        uploadFile(file);
+      }
+      else{
+        alert('can not upload more than 3 files')
+      }
+      // res.items.forEach((itemRef) => {
+      //   console.log(itemRef)
+      // });
+    })
+
   }
   else{
     // e.target=null;
     alert('please choose pdf files only')
     // console.log(file)
-  }
-  
-  // if(file){
-  //   let fileName = file.name;
-  //   dataName[0].innerHTML=fileName;
-  //   reader.readAsDataURL(file);
-  //   console.log(reader)
-  //   uploadFile(file);
-  // }
-  
+  }  
 }
 
 

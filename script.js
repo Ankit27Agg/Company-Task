@@ -54,13 +54,15 @@ const registerUser = () => {
   .then((user)=>{
     
     if(user.exists()){
+      console.log(user);
       alert('User Already Registered.')
     }
 
     else{
       set(ref(db, 'List'+ phoneNo.value),
       {
-        phoneNumber: phoneNo.value
+        phoneNumber: phoneNo.value,
+        url: ''
       }
       )
       .then(()=>{
