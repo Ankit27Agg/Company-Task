@@ -24,6 +24,7 @@ let currentUser = JSON.parse(sessionStorage.getItem('user'));
 let inputFile = document.querySelector('.input-file')
 // console.log(inputFile)
 let selectFile = inputFile.querySelector('.select-file')
+let dataName = document.getElementsByClassName('data');
 
 function signOut(){
   // console.log('hi signout')
@@ -39,6 +40,27 @@ if(currentUser==null){
 }
 else{
   heading[0].innerHTML=`Hello ${currentUser.phoneNumber}`;
+
+  let storage = getStorage(); //get storage reference
+    let storageRef = ref(storage, `${currentUser.phoneNumber}/`);
+    console.log(storageRef.child)
+  
+    listAll(storageRef)
+    .then((res) => {
+      res.items.forEach((itemRef) => {
+        console.log(itemRef);
+        dataName[0].innerHTML+=`${itemRef._location.path_}<br>`
+        // storageRef.getDownloadURL().then((URL)=>{
+        //   console.log(URL)
+        // })
+      });
+      
+    })
+
+    // storageRef.getDownloadURL().then((URL)=>{
+    //     console.log(URL)
+    //   })
+
   console.log(currentUser)
 }
 
@@ -46,7 +68,7 @@ else{
 //PDF files
 
 let reader = new FileReader();
-let dataName = document.getElementsByClassName('data');
+
 
 function uploadUrl(URL){
 
@@ -105,8 +127,9 @@ inputFile.addEventListener('click',()=>{
 selectFile.onchange = e => {
 
   let file = e.target.files[0]
+  
   if(file.type==='application/pdf'){
-    console.log(file.type)
+    console.log(file)
     let fileName = file.name;
     // uploadFile(file);
 
@@ -124,9 +147,9 @@ selectFile.onchange = e => {
       else{
         alert('can not upload more than 3 files')
       }
-      // res.items.forEach((itemRef) => {
-      //   console.log(itemRef)
-      // });
+      res.items.forEach((itemRef) => {
+        console.log(itemRef._location.path_)
+      });
     })
 
   }
