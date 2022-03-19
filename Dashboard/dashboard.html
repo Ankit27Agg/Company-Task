@@ -5,15 +5,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="dashboard.js" type="module" defer></script>
+  <link href="//cdn.muicss.com/mui-0.10.3/css/mui.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="./dashboard.css">
   <title>Task</title>
 </head>
 <body>
-  <div>
+  <div class="body-content">
     <h1 class="dashboard-heading">Dashboard</h1>
     <div class="input-file">
-      <p>select file</p>
+      
+        <p>+</p>
+        <p>Add Files</p>
       <input type="file" class="select-file" hidden>
+      
     </div>
+    <section>
+      <div class="pdf1">
+        <p class="pdf-file1"></p>
+        <a class="download-file1"><button>Download</button></a>
+      </div>
+      
+      <div class="pdf2">
+        <p class="pdf-file2"></p>
+        <a class="download-file2"><button>Download</button></a>
+      </div>
+      <div class="pdf3">
+        <p class="pdf-file3"></p>
+        <a class="download-file3"><button>Download</button></a>
+      </div>
+    </section>
     <a class="data"></a>
     <div>
       <button class="signOut">SignOut</button>
