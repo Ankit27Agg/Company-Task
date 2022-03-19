@@ -1,0 +1,31 @@
+body{
+    
+    background-color: papayawhip;
+}
+.login-body{
+    width: 60%;
+    height: 100vh;
+    margin: auto;
+    /* background-color: aqua; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-body input{
+    box-sizing: border-box;
+    border: none;
+    background-color: white;
+    margin: 0 10px;
+    padding: 9px 5px;
+    width: 15rem;
+    font-size: 0.9rem;
+}
+.login-body .register-btn{
+    margin-right: 10px;
+}
+
+/* button{
+    border: none;
+    outline: none;
+} */

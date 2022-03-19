@@ -56,8 +56,13 @@ else {
       res.items.forEach((itemRef, i) => {
         // console.log(itemRef)
         // dataName[0].innerHTML += `${itemRef._location.path_.split('/')[1]}<br>`
-        
-        document.getElementsByClassName(`pdf-file${i+1}`)[0].innerHTML += `${itemRef._location.path_.split('/')[1]}`
+        document.getElementsByClassName('files-section')[0].innerHTML += `
+        <div class="pdf${i+1} pdf">
+        <p class="pdf-file${i+1}">${itemRef._location.path_.split('/')[1]}</p>
+        <a class="download-file${i+1}"><button>Download</button></a>
+      </div>
+      `
+        // document.getElementsByClassName(`pdf-file${i+1}`)[0].innerHTML += `${itemRef._location.path_.split('/')[1]}`
         // pathName.push(itemRef._location.path_.split('/')[1])
         pathName.push(itemRef._location.path_.split('/')[1])
 
