@@ -20,10 +20,19 @@ const db = getDatabase();
 
 
 
+
+
+
 //************************  GET EVENTS FROM HTML  *********************************** */
 const phoneNo = document.getElementById('phone-no');
 const register = document.getElementsByClassName('register-btn')
 const logIn = document.getElementsByClassName('login-btn');
+
+
+
+
+
+
 
 //****************************  VALIDATION FOR PHONE NUMBER ********************************* */
 const validation = () => {

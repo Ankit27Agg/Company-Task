@@ -55,8 +55,8 @@ section .pdf{
     font-size: 0.9rem;
     width: 100%;
     /* background-color: aqua; */
-    margin-top: 7px;
-    padding: 7px 0;
+    margin-top: 27px;
+    padding: 17px 0;
     background-image: linear-gradient(to right,
     
 #8e0e00,
@@ -92,7 +92,7 @@ section .pdf{
     border: none;
     outline: none;
     justify-content: center;
-    margin-left: 2.2rem;
+    margin-left: 3rem;
     /* margin: 0 auto; */
     height: 2.2rem;
     border-radius: 2rem;

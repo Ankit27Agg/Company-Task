@@ -158,11 +158,19 @@ async function uploadFile(file, i) {
   let storageRef = ref(storage, `${currentUser.phoneNumber}/` + file.name);
 
   const uploadTask = uploadBytesResumable(storageRef, file);
-  uploadTask.on('state-changed', () => {
-
+  console.log(uploadTask)
+  uploadTask.on('state-changed', (snapshot) => {
+    alert('File is uploading. Click ok to continue.')
+    console.log(snapshot)
     getDownloadURL(uploadTask.snapshot.ref)
       .then((URL) => {
         console.log(URL);
+        document.getElementsByClassName('files-section')[0].innerHTML += `
+        <div class="pdf${i+1} pdf">
+        <p class="pdf-file${i+1}">${file.name}</p>
+        <a class="download-file${i+1}"><button>Download</button></a>
+      </div>
+      `
         document.getElementsByClassName(`download-file${i+1}`)[0].addEventListener('click', function () {
           document.getElementsByClassName(`download-file${i+1}`)[0].href = URL;
         })
@@ -170,25 +178,15 @@ async function uploadFile(file, i) {
         // dataName[0].href = `${URL}`
 
         uploadUrl(URL)
+        alert('File uploaded successfully.')
       })
 
   })
 
-  // set(ref(db, 'List'+ currentUser.phoneNumber),
-  //     {
-  //       phoneNumber: phoneNo.value,
-  //       url: URL
-  //     }
-  //     )
-  //     .then(()=>{
-  //       alert('url added in firebase')
-  //     })
-
-
-  alert('file uploaded')
-  setTimeout(()=>{
-    window.location='../Dashboard/dashboard.html';
-  },1000)
+  // alert('file uploaded. Click Ok and wait for few seconds.')
+  // setTimeout(()=>{
+  //   // window.location='../Dashboard/dashboard.html';
+  // },4000)
   // window.location='../Dashboard/dashboard.html';
 }
 
