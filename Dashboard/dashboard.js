@@ -160,8 +160,20 @@ async function uploadFile(file, i) {
   const uploadTask = uploadBytesResumable(storageRef, file);
   console.log(uploadTask)
   alert('File is uploading. Click ok to continue and wait for few seconds.')
+
   uploadTask.on('state-changed', (snapshot) => {
     console.log(snapshot)
+    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    document.getElementsByClassName('uploading')[0].innerHTML=`${progress}% upload done.`
+    console.log('Upload is ' + progress + '% done');
+
+  },
+  (error) => {
+    // Handle unsuccessful uploads
+  },
+
+  () => {
+    document.getElementsByClassName('uploading')[0].innerHTML=''
     getDownloadURL(uploadTask.snapshot.ref)
       .then((URL) => {
         console.log(URL);
@@ -177,11 +189,17 @@ async function uploadFile(file, i) {
 
         // dataName[0].href = `${URL}`
 
-        uploadUrl(URL)
-        alert('File uploaded successfully.')
-      })
+        // uploadUrl(URL)
+        // alert('File uploaded successfully.')
 
-  })
+      })
+    alert('File uploaded successfully.')
+    window.location='../Dashboard/dashboard.html';
+  }
+  
+  )
+  // alert('file uploaded')
+  // window.location='../Dashboard/dashboard.html';
 
   // alert('file uploaded. Click Ok and wait for few seconds.')
   // setTimeout(()=>{
@@ -203,7 +221,6 @@ selectFile.onchange = e => {
   if (file.type === 'application/pdf') {
     console.log(file)
     let fileName = file.name;
-    // uploadFile(file);
 
     let storage = getStorage(); //get storage reference
     let storageRef = ref(storage, `${currentUser.phoneNumber}/`);
@@ -211,27 +228,60 @@ selectFile.onchange = e => {
 
     listAll(storageRef)
       .then((res) => {
-        // console.log(res.items)
-        if (res.items.length < 3) {
-          // document.getElementsByClassName(`pdf-file${res.items.length+1}`)[0].innerHTML = `${fileName}`
-          // dataName[0].innerHTML += `${fileName}<br>`
-          uploadFile(file, res.items.length);
-          // window.location='../Dashboard/dashboard.html';
+        console.log(res.items)
+        console.log(res.items
+          .some((itemRef)=>{
+            console.log(itemRef._location.path_.split('/')[1])
+            console.log(fileName)
+            itemRef._location.path_.split('/')[1] == fileName}
+                ))
+        
+        let flag=0;
+        
+        console.log(res.items.length)
+        if(res.items.length==0){
+          console.log('start')
+          if (res.items.length < 3) {
+            // document.getElementsByClassName(`pdf-file${res.items.length+1}`)[0].innerHTML = `${fileName}`
+            // dataName[0].innerHTML += `${fileName}<br>`
+            uploadFile(file, res.items.length);
+            // window.location='../Dashboard/dashboard.html';
+          }
+          else {
+            alert('can not upload more than 3 files')
+          }
         }
-        else {
-          alert('can not upload more than 3 files')
+        for(let i=1; i<=res.items.length; i++){
+          console.log('inside for loop')
+
+          if(res.items[i-1]._location.path_.split('/')[1] == fileName){
+            alert(`${fileName} already uploaded.`)
+          console.log('finish')
+            break;
+          }
+          else{
+            flag=1;
+            console.log(flag)
+          }
         }
-        res.items.forEach((itemRef) => {
-          console.log(itemRef._location.path_)
-        });
+        if(flag){
+          console.log('start')
+          if (res.items.length < 3) {
+            // document.getElementsByClassName(`pdf-file${res.items.length+1}`)[0].innerHTML = `${fileName}`
+            // dataName[0].innerHTML += `${fileName}<br>`
+            uploadFile(file, res.items.length);
+            // window.location='../Dashboard/dashboard.html';
+          }
+          else {
+            alert('can not upload more than 3 files')
+          }
+        }
       })
       
 
   }
   else {
-    // e.target=null;
     alert('please choose pdf files only')
-    // console.log(file)
   }
 }
 
