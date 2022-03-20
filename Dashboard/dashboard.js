@@ -159,8 +159,8 @@ async function uploadFile(file, i) {
 
   const uploadTask = uploadBytesResumable(storageRef, file);
   console.log(uploadTask)
+  alert('File is uploading. Click ok to continue and wait for few seconds.')
   uploadTask.on('state-changed', (snapshot) => {
-    alert('File is uploading. Click ok to continue.')
     console.log(snapshot)
     getDownloadURL(uploadTask.snapshot.ref)
       .then((URL) => {
