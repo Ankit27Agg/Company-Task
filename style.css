@@ -2,9 +2,15 @@ body{
     
     background-color: papayawhip;
 }
+.project-heading{
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
 .login-body{
     width: 60%;
-    height: 100vh;
+    height: 87vh;
     margin: auto;
     /* background-color: aqua; */
     display: flex;
@@ -29,3 +35,14 @@ body{
     border: none;
     outline: none;
 } */
+
+.project-footer{
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+}
+.project-footer a{
+    color: red;
+    text-decoration: none;
+}
